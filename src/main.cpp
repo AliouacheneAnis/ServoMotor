@@ -8,6 +8,9 @@
 
 #include <Arduino.h>
 #include<Servo.h>
+#include <WIFIConnector_MKR1010.h>
+#include<MQTTConnector.h>
+
 #define NOTE_FS6 1480;
 
 // Declaration constantes 
@@ -28,6 +31,9 @@ Servo myservo;
 
 
 void setup() {
+
+  wifiConnect(); 
+  MQTTConnect();
 
   //setup broches
   pinMode(TOUCH_SENSOR, INPUT);
@@ -60,7 +66,10 @@ void loop() {
           myservo.write(pos); 
           delay(20);
       }
-
+     
+ appendPayload("Position ", pos); 
+ sendPayload(); 
+  
   }
 
   // Condition Bouton 
@@ -77,8 +86,11 @@ void loop() {
           pos-= 1;
           myservo.write(pos);
           delay(20);
-      }    
+      }   
+  appendPayload("Position ", pos); 
+ sendPayload();  
 }
+
 
 }
 
